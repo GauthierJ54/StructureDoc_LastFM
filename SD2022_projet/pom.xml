@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fr.ul.miage</groupId>
+  <artifactId>SD2022_projet</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+<name>SD2022_projet</name>
+  <description>TP2 - baignoire par Gauthier JACQUES</description>
+  <properties>
+	<project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+	<project.bindist.dir>${project.basedir}/bindist</project.bindist.dir>
+	<project.main.classname>${project.groupId}.${project.artifactId}.Launcher</project.main.classname>
+	<project.bin.appname>run</project.bin.appname>
+  </properties>
+  <build>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.8.0</version>
+			<configuration>
+				<release>11</release>
+			</configuration>
+		</plugin>
+		<!-- -->
+		<plugin>
+	        <groupId>org.codehaus.mojo</groupId>
+	        <artifactId>appassembler-maven-plugin</artifactId>
+	        <version>1.10</version>
+	        <executions>
+	          <execution>
+				<id>win</id>
+	            <phase>package</phase>
+	            <goals>
+	              <goal>assemble</goal>
+	            </goals>
+		        <configuration>
+		          <assembleDirectory>${project.bindist.dir}</assembleDirectory>
+				  <repositoryLayout>flat</repositoryLayout>
+				  <extraJvmArguments>
+					--module-path %JAVAFX_HOME%/lib --add-modules javafx.controls,javafx.fxml
+				  </extraJvmArguments>
+		          <programs>
+		            <program>
+					  <platforms>
+					  	<platform>windows</platform>
+                      </platforms>
+		              <mainClass>${project.main.classname}</mainClass>
+		              <id>${project.bin.appname}</id>
+		            </program>
+		          </programs>
+		        </configuration>
+	          </execution>
+	          <execution>
+				<id>unix</id>
+	            <phase>package</phase>
+	            <goals>
+	              <goal>assemble</goal>
+	            </goals>
+		        <configuration>
+		          <assembleDirectory>${project.bindist.dir}</assembleDirectory>
+				  <repositoryLayout>flat</repositoryLayout>
+				  <extraJvmArguments>
+					--module-path $JAVAFX_HOME/lib --add-modules javafx.controls,javafx.fxml
+				  </extraJvmArguments>
+		          <programs>
+		            <program>
+					  <platforms>
+					  	<platform>unix</platform>
+                      </platforms>
+		              <mainClass>${project.main.classname}</mainClass>
+		              <id>${project.bin.appname}</id>
+		            </program>
+		          </programs>
+		        </configuration>
+	          </execution>
+	        </executions>
+		</plugin>
+		<!-- -->
+		<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>make-zip</id>
+            <phase>install</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>zip.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>true</appendAssemblyId>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+	</plugins>
+  </build>
+  <dependencies>
+	<dependency>
+    <groupId>org.mongodb</groupId>
+    <artifactId>mongo-java-driver</artifactId>
+    <version>3.12.11</version>
+</dependency>
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20220320</version>
+</dependency>
+  </dependencies>
+</project>
