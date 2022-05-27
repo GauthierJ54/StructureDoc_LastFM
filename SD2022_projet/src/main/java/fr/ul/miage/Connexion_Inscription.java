@@ -2,36 +2,60 @@ package fr.ul.miage;
 
 import java.util.ArrayList;
 
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.jayway.jsonpath.JsonPath;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 public class Connexion_Inscription {
+	
+	private MongoDatabase db;
+	MongoCollection<Document> collection = null;
+	
+	public Connexion_Inscription(MongoDatabase m) {
+		db = m;
+	}
 
-	public static void connexion(String user, String mdp, MongoDatabase m) {
-		String uri = "mongodb://localhost:27017";
-		try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase db = mongoClient.getDatabase("SD2022_projet");
-            if(!db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_client")) {
-            	db.createCollection("GGJSC_client");
-            }
- 
-            } catch (MongoException me) {
-                System.err.println("An error occurred while attempting to run a command: " + me);
-            }
+	public boolean connexion(String user, String mdp, MongoDatabase m) {
+		if(!db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_client")) {
+        	db.createCollection("GGJSC_client");
+        }
+		collection = db.getCollection("GGJSC_client");
+		Document Docuser = collection.find(new Document("user", user)).first();
+		if (Docuser == null) {
+			System.out.println("Ce nom n'existe pas !!");
+			return false;
+		}else {
+			if (true) {
+				return true;
+			}else {
+				return false;
+			}
+		}
 	}
 	
-	public static void inscription(String user, String mdp) {
-		String uri = "mongodb://localhost:27017";
-		try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase db = mongoClient.getDatabase("SD2022_projet");
-            if(!db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_Client")) {
-            	db.createCollection("GGJSC_Client");
-            }
- 
-            } catch (MongoException me) {
-                System.err.println("An error occurred while attempting to run a command: " + me);
-            }
+	public boolean inscription(String user, String mdp) {
+		if(!db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_client")) {
+        	db.createCollection("GGJSC_client");
+        }
+		collection = db.getCollection("GGJSC_client");
+		Document Docuser = collection.find(new Document("user", user)).first();
+		if (Docuser == null) {
+			Document d = new Document()
+			        .append("_id", new ObjectId())
+			        .append("user", user)
+			        .append("pass", mdp)
+			        .append("niveau", "0");
+			collection.insertOne(d);
+			return true;
+		}else {
+			System.out.println("Ce nom est deja utilisée !!");
+			return false;
+		}
 	}
 }
