@@ -58,10 +58,9 @@ public class Launcher {
 		MongoCollection<Document> collection = null;
 		DateTimeFormatter dtf4 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 	
-		System.out.println("Projet Structuration de Documents\r\n"
-				+ "Collecte de statistiques et de recommandation de musique\r\n"
-				+ "Master I MIAGE 2021-22\r\n"
-				+ "Gauthier JACQUES / Sofiane CHELH");
+		System.out.println("*** Projet Structuration de Documents ***\r\n"
+				+ "** Collecte de statistiques et de recommandation de musique **\r\n"
+				+ "* Master I MIAGE 2022 Gauthier JACQUES - Sofiane CHELH * \r\n");
 		
 		System.out.println("Souhaitez vous vous connecter ou vous inscrire ?");
 		int x;
@@ -71,23 +70,25 @@ public class Launcher {
 				x = sc.nextInt();
 				switch (x) {
 				case 1:
-					System.out.println("Connexion :");
-					System.out.println("Nom d'utilisateur :");
+
+					System.out.println("** CONNEXION **");
+					System.out.println("Veuillez saisir votre nom d'utilisateur :");
+					sc.nextLine();
 					user = sc.nextLine();
-					System.out.println("Mot de Passe :");
+					System.out.println("Veuillez saisir votre mot de passe :");
 					String mdp = sc.nextLine();
 					co = CI.connexion(user, mdp);
 					break;
 					
 				case 2:
-					System.out.println("Inscription :");
-					System.out.println("Nom d'utilisateur :");
+					System.out.println("** INSCRIPTION **");
+					System.out.println("Veuillez saisir un nom d'utilisateur disponible :");
+					sc.nextLine();
 					user = sc.nextLine();
-					System.out.println("Mot de Passe :");
+					System.out.println("Veuillez saisir un mot de passe :");
 					String passInscr = sc.nextLine();
 					co = CI.inscription(user, passInscr);
 					break;
-					
 				default:
 					co = true;
 					break;
@@ -96,29 +97,29 @@ public class Launcher {
 		
 		
 		
-		System.out.println("Bonjour " + user);
+		System.out.println("Bienvenue " + user);
 		
 		while (bool) {
 				System.out.println("Que voulez vous faire ?");
-				System.out.println("(1) Informations sur un tag");
-				System.out.println("(2) Informations sur un album");
-				System.out.println("(3) Informations sur un artiste");
-				System.out.println("(4) Tendance Artiste (Monde)");
-				System.out.println("(5) Tendance Tracks (Monde)");
+				System.out.println("(1) Rechercher des informations sur un tag");
+				System.out.println("(2) Rechercher des informations sur un album");
+				System.out.println("(3) Rechercher des informations sur un artiste");
+				System.out.println("(4) Rechercher les tendances concernant les artistes (Monde)");
+				System.out.println("(5) Rechercher les tendances concernant les tracks (Monde)");
 				System.out.println("(6) Tendance Tags (Monde)");
 				System.out.println("(7) Tendance Artiste (Pays)");
 				System.out.println("(8) Tendance Tracks (Pays)");
 				System.out.println("(9) Album ou chansons similaires a un artiste");
 				System.out.println("(10) Laisser un avis");
-				System.out.println("(11) Visualiser les opérations");
-				System.out.println("(12) EXIT");
+				System.out.println("(11) Afficher les dernières opérations");
+				System.out.println("(12) Quitter l'application");
 				int c = sc.nextInt();
 				
 				switch (c) {
 				case 1:
-					System.out.println("Nom du tag recherché :");
+					System.out.println("Entrez le nom du tag recherché :");
+					sc.nextLine();
 					String l = sc.nextLine();
-					l="rap";
 					String loc = null;
 					if(!db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_tags")) {
 			        	db.createCollection("GGJSC_tags");
@@ -128,7 +129,7 @@ public class Launcher {
 					if (tag == null) {
 						api.getTags(l);
 						tag = collection.find(new Document("name", l)).first();
-						loc = "disatnce";
+						loc = "distance";
 					}else {
 						loc = "local";
 					}
@@ -172,7 +173,7 @@ public class Launcher {
 					
 					break;
 				case 8:
-					
+
 					break;
 				case 9:
 					

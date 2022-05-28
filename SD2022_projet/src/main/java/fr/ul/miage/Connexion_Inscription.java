@@ -28,14 +28,14 @@ public class Connexion_Inscription {
 		collection = db.getCollection("GGJSC_client");
 		Document Docuser = collection.find(new Document("user", user)).first();
 		if (Docuser == null) {
-			System.out.println("Ce nom n'existe pas !!");
+			System.out.println("Ce nom d'utilisateur n'existe pas, veuillez recommencer.");
 			return false;
 		}else {
 			if (Docuser.get("pass").equals(mdp)) {
 				System.out.println("Connecté !!");
 				return true;
 			}else {
-				System.out.println("Mauvais mot de passe !!");
+				System.out.println("Mot de passe incorrect");
 				return false;
 			}
 		}
