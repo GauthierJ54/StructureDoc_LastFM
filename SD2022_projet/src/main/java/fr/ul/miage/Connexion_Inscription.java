@@ -21,7 +21,7 @@ public class Connexion_Inscription {
 		db = m;
 	}
 
-	public boolean connexion(String user, String mdp, MongoDatabase m) {
+	public boolean connexion(String user, String mdp) {
 		if(!db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_client")) {
         	db.createCollection("GGJSC_client");
         }
@@ -31,9 +31,11 @@ public class Connexion_Inscription {
 			System.out.println("Ce nom n'existe pas !!");
 			return false;
 		}else {
-			if (true) {
+			if (Docuser.get("pass").equals(mdp)) {
+				System.out.println("Connecté !!");
 				return true;
 			}else {
+				System.out.println("Mauvais mot de passe !!");
 				return false;
 			}
 		}

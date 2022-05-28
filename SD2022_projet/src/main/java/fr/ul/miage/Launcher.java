@@ -76,24 +76,20 @@ public class Launcher {
 					user = sc.nextLine();
 					System.out.println("Mot de Passe :");
 					String mdp = sc.nextLine();
-					co = CI.connexion(user, mdp, null);
+					co = CI.connexion(user, mdp);
 					break;
 					
 				case 2:
 					System.out.println("Inscription :");
 					System.out.println("Nom d'utilisateur :");
-					user = "Gauthier";
+					user = sc.nextLine();
 					System.out.println("Mot de Passe :");
 					String passInscr = sc.nextLine();
-					co = CI.inscription(user, "tes");
+					co = CI.inscription(user, passInscr);
 					break;
 					
 				default:
 					co = true;
-					api.getAlbum("Cher", "Believe");
-					api.getTopArtists();
-					HTTPTools http = new HTTPTools();
-					http.sendGet("https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=6bec022c061e92dd4f13be1c90cdcfcd&artist=Cher&album=Believe&format=json");
 					break;
 				}			
 		}
@@ -136,8 +132,10 @@ public class Launcher {
 					}else {
 						loc = "local";
 					}
-					System.out.println("Informations sur le tag - " + l + " - :");
-					System.out.println(tag.getString("name"));
+					System.out.println("Informations sur le tag - " + l.toUpperCase() + " - :");
+					System.out.println(tag.getInteger("total"));
+					System.out.println(tag.getInteger("reach"));
+					System.out.println("Description : " + tag.getString("summary") + "\n");
 		            Document d = new Document()
 					        .append("_id", new ObjectId())
 					        .append("requete", "Infos Tag - " + l)
