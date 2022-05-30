@@ -98,6 +98,10 @@ public class Launcher {
 		
 		
 		System.out.println("Bienvenue " + user);
+		String l;
+		String loc;
+		Document docu;
+		Document d;
 		
 		while (bool) {
 				System.out.println("Que voulez vous faire ?");
@@ -119,25 +123,25 @@ public class Launcher {
 				case 1:
 					System.out.println("Entrez le nom du tag recherché :");
 					sc.nextLine();
-					String l = sc.nextLine();
-					String loc = null;
+					l = sc.nextLine();
+					loc = null;
 					if(!db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_tags")) {
 			        	db.createCollection("GGJSC_tags");
 			        }
 					collection = db.getCollection("GGJSC_tags");
-					Document tag = collection.find(new Document("name", l)).first();
-					if (tag == null) {
+					docu = collection.find(new Document("name", l)).first();
+					if (docu == null) {
 						api.getTags(l);
-						tag = collection.find(new Document("name", l)).first();
+						docu = collection.find(new Document("name", l)).first();
 						loc = "distance";
 					}else {
 						loc = "local";
 					}
 					System.out.println("Informations sur le tag - " + l.toUpperCase() + " - :");
-					System.out.println(tag.getInteger("total"));
-					System.out.println(tag.getInteger("reach"));
-					System.out.println("Description : " + tag.getString("summary") + "\n");
-		            Document d = new Document()
+					System.out.println(docu.getInteger("total"));
+					System.out.println(docu.getInteger("reach"));
+					System.out.println("Description : " + docu.getString("summary") + "\n");
+		            d = new Document()
 					        .append("_id", new ObjectId())
 					        .append("requete", "Infos Tag - " + l)
 					        .append("date", dtf4.format(LocalDateTime.now()))
@@ -153,18 +157,58 @@ public class Launcher {
 							
 					break;
 				case 3:
+					System.out.println("Entrez le nom de l'artiste recherché :");
+					sc.nextLine();
+					l = sc.nextLine();
+					loc = null;
+					if(!db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_artistes")) {
+			        	db.createCollection("GGJSC_artistes");
+			        }
 					collection = db.getCollection("GGJSC_artistes");
-		            try {
-		            	Document student1 = collection.find(new Document("name", "Eminem")).first();
-		                System.out.println("Student 1: " + student1.toJson());
-					} catch (Exception e) {
-						
+					docu = collection.find(new Document("name", l)).first();
+					if (docu == null) {
+						api.getArtist(l);
+						docu = collection.find(new Document("name", l)).first();
+						loc = "distance";
+					}else {
+						loc = "local";
 					}
+					if (docu != null) {
+						System.out.println("Informations sur l'artiste - " + l.toUpperCase() + " - :");
+						System.out.println(docu.getString("url"));
+						System.out.println(docu.getString("listeners"));
+						System.out.println(docu.getString("playcount"));
+						System.out.print("Description : " + docu.getString("summary") + "\n");
+						ArrayList<String> al = (ArrayList<String>) docu.get("similar");
+						for (String s : al) {
+							System.out.print("* " + s + " *");
+						}
+						System.out.println("");
+						al = (ArrayList<String>) docu.get("tags");
+						for (String s : al) {
+							System.out.print("* " + s + " *");
+						}
+						System.out.println("");
+						d = new Document()
+						        .append("_id", new ObjectId())
+						        .append("requete", "Infos Artiste - " + l)
+						        .append("date", dtf4.format(LocalDateTime.now()))
+						        .append("user", user)
+						        .append("type", loc);
+			            if(!db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_operation")) {
+				        	db.createCollection("GGJSC_operation");
+				        }
+			            collection = db.getCollection("GGJSC_operation");
+			            collection.insertOne(d);
+					}else {
+						System.out.println("L'artiste n'existe pas !!");
+					}
+					
 					break;
 				case 4:
 					break;
 				case 5:
-					
+					api.getTopTracks();
 					break;
 				case 6:
 					

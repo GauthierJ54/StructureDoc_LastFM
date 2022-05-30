@@ -87,12 +87,28 @@ public class ApiLastFM {
 	
 	public void getTopTags() {
 		String res = http.sendGet("https://ws.audioscrobbler.com/2.0/?method=chart.gettoptags&api_key=" + key + "&format=json");
+		
 		ajoutBDD(Document.parse(res), "GGJSC_topTags");
 	}
 	
 	public void getTopTracks() {
+		if(db.listCollectionNames().into(new ArrayList<String>()).contains("GGJSC_topTracks")) {
+			db.getCollection("GGJSC_topTracks").drop();
+        }
 		String res = http.sendGet("http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=" + key + "&format=json");
-		ajoutBDD(Document.parse(res), "GGJSC_topTracks");
+		JSONArray tab = JsonPath.read(res, "$.tracks.track");
+		Document doc = new Document();
+		for (Object o : tab) {
+			LinkedHashMap<String, Document> t = (LinkedHashMap<String, Document>) o;
+			System.out.println(t.get("artist"));
+			doc.append("_id", new ObjectId());
+			doc.append("name", t.get("name"));
+			doc.append("playcount", t.get("playcount"));
+			doc.append("listeners", t.get("listeners"));
+			doc.append("url", t.get("url"));
+			//doc.append("artist", t.get("artist").get("name"));
+			ajoutBDD(doc, "GGJSC_topTracks");
+		}
 	}
 	
 	public void getTopTracksPays(String p) {
